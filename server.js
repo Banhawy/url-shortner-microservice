@@ -6,7 +6,6 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 const shortid = require('shortid');
 const validUrl = require('valid-url');
-// const env = process.env.MONGODB_URI;
 app.use(express.static('public'))
 
 // Homepage
@@ -16,6 +15,8 @@ app.get('/', (req,res)=>{
 
 app.get('/new/:url(*)', (req,res)=>{
     console.log('Working');
+    // Get host address
+    const host = req.get('host') + '/';
     // Connect to DB
     MongoClient.connect(process.env.MONGODB_URI, (err,db)=>{
         if (err) console.log('Unable to connect to the mongoDB server. Error: ', err);
@@ -38,7 +39,7 @@ app.get('/new/:url(*)', (req,res)=>{
                     collection.insert([newUrl]);
                     res.json({
                         original_url: url,
-                        alias_url : hash
+                        alias_url : host + hash
                     })
                     db.close();
                 }
