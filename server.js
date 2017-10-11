@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors());
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 const shortid = require('shortid');
@@ -9,6 +8,7 @@ const validUrl = require('valid-url');
 
 // Homepage
 app.use(express.static('public'));
+app.use(cors());
 
 app.get('/new/:url(*)', (req,res)=>{
     console.log('Working');
