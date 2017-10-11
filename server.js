@@ -18,7 +18,7 @@ app.get('/new/:url(*)', (req,res)=>{
     console.log('Working');
     // Connect to DB
     MongoClient.connect(process.env.MONGODB_URI, (err,db)=>{
-        if (err) console.log('Unable to connect to the mongoDB server. Error:', err);
+        if (err) console.log('Unable to connect to the mongoDB server. Error: ', err);
         let collection = db.collection('urls');
         console.log('Connection Established to db.');
         const url = req.params.url;
@@ -29,8 +29,9 @@ app.get('/new/:url(*)', (req,res)=>{
                 if (doc != null) {
                     res.json({
                         url: url,
-                        alias: doc.alias
+                        alias_url: doc.alias
                     })
+                    db.close();
                 } else {
                     const hash = shortid.generate();
                     const newUrl = { url : url, alias: hash };
@@ -39,13 +40,34 @@ app.get('/new/:url(*)', (req,res)=>{
                         original_url: url,
                         alias_url : hash
                     })
+                    db.close();
                 }
             })
         } else{
             res.json({ error: "Wrong url format, make sure you have a valid protocol and real site." });
+            db.close();
         }
-        db.close();
+        
     });
 });
 
-app.listen(3000);
+app.get('/:alias(*)', (req,res)=>{
+    console.log('Recieved connection');
+    const {alias} = req.params
+    MongoClient.connect(process.env.MONGODB_URI, (err, db)=>{
+        if (err) console.log('Unable to connect to the mongoDB server. Error: ', err);
+        const collection = db.collection('urls');
+        console.log('Connection Established to db.');
+        collection.findOne({ alias: alias }, {url : 1, _id: 0}, (err, docs)=>{
+            if (docs != null){
+                res.redirect(docs.url)
+                db.close();
+            } else {
+                res.json({ error: "No URL associated with this alias was found." });
+                db.close();
+            }
+        })
+    })
+})
+
+app.listen(process.env.PORT || 3000);
