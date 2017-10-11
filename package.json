@@ -1,0 +1,30 @@
+{
+  "name": "url-shortner-ms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Banhawy/url-shortner-microservice.git"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "ejs": "2.5.6",
+    "express": "^4.16.1",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.12.1",
+    "nodemon": "^1.12.1",
+    "shortid": "^2.2.8",
+    "valid-url": "^1.0.9"
+  },
+  "author": "Adham El Banhawy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Banhawy/url-shortner-microservice/issues"
+  },
+  "homepage": "https://github.com/Banhawy/url-shortner-microservice#readme"
+}
