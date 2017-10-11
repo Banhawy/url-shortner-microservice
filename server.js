@@ -6,12 +6,9 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 const shortid = require('shortid');
 const validUrl = require('valid-url');
-app.use(express.static('public'))
 
 // Homepage
-app.get('/', (req,res)=>{
-    req.render('index')
-})
+app.use(express.static('public'));
 
 app.get('/new/:url(*)', (req,res)=>{
     console.log('Working');
