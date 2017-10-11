@@ -22,18 +22,28 @@ app.get('/new/:url(*)', (req,res)=>{
         let collection = db.collection('urls');
         console.log('Connection Established to db.');
         const url = req.params.url;
+        // Check if string is valid URL
         if (validUrl.isUri(url)){
-            const hash = shortid.generate();
-            const newUrl = { url : url, alias: hash };
-            collection.insert([newUrl]);
-            res.json({
-                original_url: url,
-                alias_url : 'localhost:3000/' + hash
+            // Check if URL exists in database
+            collection.findOne({ url: url }, { alias: 1, _id: 0 }, (err, doc)=>{
+                if (doc != null) {
+                    res.json({
+                        url: url,
+                        alias: doc.alias
+                    })
+                } else {
+                    const hash = shortid.generate();
+                    const newUrl = { url : url, alias: hash };
+                    collection.insert([newUrl]);
+                    res.json({
+                        original_url: url,
+                        alias_url : hash
+                    })
+                }
             })
         } else{
             res.json({ error: "Wrong url format, make sure you have a valid protocol and real site." });
         }
-        collection.insert([insertLink]);
         db.close();
     });
 });
